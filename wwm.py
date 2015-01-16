@@ -93,7 +93,7 @@ class HD44780:
         GPIO.output(self.pin_e, True)
         GPIO.output(self.pin_e, False)
 
-    def insertToDB(distance):
+    def insertToDB(self, distance):
         """ insertToDB to LCD """
         db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
         cur = db.cursor()
