@@ -98,8 +98,13 @@ class HD44780:
         db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
         cur = db.cursor()
         currentTime = datetime.datetime.now()
-        query = ("INSERT INTO distance VALUES('asd','asdd')")
-        cur.execute(query)
+        query = ("""INSERT INTO distance(distance, date) VALUES(%(distance)s, %(currentTime)s)""")
+        data = {
+		'distance': distance,
+		'currentTime': currentTime,
+	}
+	cur.execute(query, data)
+	db.commit()
         cur.close()
         db.close()
 
@@ -119,7 +124,6 @@ if __name__ == '__main__':
 	while WORK :
 		#lcd = HD44780()
 		dist1 = lcd.getDistance()
-		lcd.insertToDB(dist1)
 		sleep(0.1)
 		dist2 = lcd.getDistance()
 		sleep(0.1)
@@ -142,6 +146,7 @@ if __name__ == '__main__':
 		#lcd.message(str(dist)+" cm\nLeft: "+str(temp)+" sek")
 		#temp = temp - 1
 		if dist < 5:
+			lcd.insertToDB(dist)
 			GPIO.output(BRAKE,True)
 			tempMes="  !!! STOP !!!"
 		else:
