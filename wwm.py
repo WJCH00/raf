@@ -15,20 +15,20 @@ BRAKE = 13
 class HD44780:
 
 
-	def __init__(self, pin_rs=7, pin_e=8, pins_db=[25, 24, 23, 18]):
+    def __init__(self, pin_rs=7, pin_e=8, pins_db=[25, 24, 23, 18]):
 
-		self.pin_rs = pin_rs
-		self.pin_e = pin_e
-		self.pins_db = pins_db
+        self.pin_rs = pin_rs
+        self.pin_e = pin_e
+        self.pins_db = pins_db
 	#GPIO.cleanup()
 	GPIO.setwarnings(False)
-		GPIO.setmode(GPIO.BCM)
-		GPIO.setup(self.pin_e, GPIO.OUT)
-		GPIO.setup(self.pin_rs, GPIO.OUT)
-		for pin in self.pins_db:
-			GPIO.setup(pin, GPIO.OUT)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(self.pin_e, GPIO.OUT)
+        GPIO.setup(self.pin_rs, GPIO.OUT)
+        for pin in self.pins_db:
+            GPIO.setup(pin, GPIO.OUT)
 	GPIO.setup(TRIG,GPIO.OUT)
-		GPIO.setup(ECHO,GPIO.IN)
+        GPIO.setup(ECHO,GPIO.IN)
 	GPIO.setup(BUZZ0,GPIO.OUT)
 	GPIO.setup(BUZZ1,GPIO.OUT)
 	GPIO.setup(BUZZ2,GPIO.OUT)
@@ -38,7 +38,7 @@ class HD44780:
 	#time.sleep(2)
 	self.clear()
 
-	def getDistance(self):
+    def getDistance(self):
 	"""Get distance"""
 	"""GPIO.output(TRIG,False)"""
 	"""time.sleep(2)"""
@@ -56,61 +56,61 @@ class HD44780:
 		return 0
 	return distance
 
-	def clear(self):
-		""" Reset LCD """
-		self.cmd(0x33)
-		self.cmd(0x32)
-		self.cmd(0x28)
-		self.cmd(0x0C)
-		self.cmd(0x06)
-		self.cmd(0x01)
+    def clear(self):
+        """ Reset LCD """
+        self.cmd(0x33)
+        self.cmd(0x32)
+        self.cmd(0x28)
+        self.cmd(0x0C)
+        self.cmd(0x06)
+        self.cmd(0x01)
 
-	def cmd(self, bits, char_mode=False):
-		""" Command to LCD """
+    def cmd(self, bits, char_mode=False):
+        """ Command to LCD """
 
-		sleep(0.001)
-		bits=bin(bits)[2:].zfill(8)
+        sleep(0.001)
+        bits=bin(bits)[2:].zfill(8)
 
-		GPIO.output(self.pin_rs, char_mode)
+        GPIO.output(self.pin_rs, char_mode)
 
-		for pin in self.pins_db:
-			GPIO.output(pin, False)
+        for pin in self.pins_db:
+            GPIO.output(pin, False)
 
-		for i in range(4):
-			if bits[i] == "1":
-				GPIO.output(self.pins_db[::-1][i], True)
+        for i in range(4):
+            if bits[i] == "1":
+                GPIO.output(self.pins_db[::-1][i], True)
 
-		GPIO.output(self.pin_e, True)
-		GPIO.output(self.pin_e, False)
+        GPIO.output(self.pin_e, True)
+        GPIO.output(self.pin_e, False)
 
-		for pin in self.pins_db:
-			GPIO.output(pin, False)
+        for pin in self.pins_db:
+            GPIO.output(pin, False)
 
-		for i in range(4,8):
-			if bits[i] == "1":
-				GPIO.output(self.pins_db[::-1][i-4], True)
+        for i in range(4,8):
+            if bits[i] == "1":
+                GPIO.output(self.pins_db[::-1][i-4], True)
 
-		GPIO.output(self.pin_e, True)
-		GPIO.output(self.pin_e, False)
+        GPIO.output(self.pin_e, True)
+        GPIO.output(self.pin_e, False)
 
-	def insertToDB(self, distance):
-		""" insertToDB to LCD """
-		db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
-		cur = db.cursor()
-		currentTime = datetime.datetime.now()
-		query = ("INSERT INTO distance(distance, date) VALUES ('asd','asdd')")
-		cur.execute(query)
-		cur.close()
-		db.close()
+    def insertToDB(self, distance):
+        """ insertToDB to LCD """
+        db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
+        cur = db.cursor()
+        currentTime = datetime.datetime.now()
+        query = ("INSERT INTO distance VALUES('asd','asdd')")
+        cur.execute(query)
+        cur.close()
+        db.close()
 
-	def message(self, text):
-		""" Send string to LCD """
+    def message(self, text):
+        """ Send string to LCD """
 
-		for char in text:
-			if char == '\n':
-				self.cmd(0xC0) # next line
-			else:
-				self.cmd(ord(char),True)
+        for char in text:
+            if char == '\n':
+                self.cmd(0xC0) # next line
+            else:
+                self.cmd(ord(char),True)
 
 if __name__ == '__main__':
 	temp = 100
@@ -119,6 +119,7 @@ if __name__ == '__main__':
 	while WORK :
 		#lcd = HD44780()
 		dist1 = lcd.getDistance()
+		lcd.insertToDB(dist1)
 		sleep(0.1)
 		dist2 = lcd.getDistance()
 		sleep(0.1)
@@ -149,7 +150,6 @@ if __name__ == '__main__':
 		sleep(0.01)
 		lcd.message("Dis.= "+str(dist)+" cm\n"+tempMes)
 		if dist < 10:
-			lcd.insertToDB(dist)
 			GPIO.output(BUZZ0,True)
 			GPIO.output(BUZZ1,False)
 			GPIO.output(BUZZ2,False)
