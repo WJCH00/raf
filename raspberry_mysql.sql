@@ -23,25 +23,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `diody`
+-- Struktura tabeli dla tabeli `leds`
 --
 
-CREATE TABLE IF NOT EXISTS `diody` (
+CREATE TABLE IF NOT EXISTS `leds` (
   `id` int(11) NOT NULL,
-  `wlacz` tinyint(1) NOT NULL,
-  `gpio` int(11) NOT NULL
+  `on` tinyint(1) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Zrzut danych tabeli `diody`
+-- Zrzut danych tabeli `leds`
 --
 
-INSERT INTO `diody` (`id`, `wlacz`, `gpio`) VALUES
-(1, 0, 0),
-(2, 0, 0),
-(3, 0, 0),
-(4, 1, 0),
-(5, 0, 0);
+INSERT INTO `leds` (`id`, `wlacz`) VALUES
+(1, 0),
+(2, 0),
+(3, 0),
+(4, 1),
+(5, 0);
 
 -- --------------------------------------------------------
 
@@ -58,10 +57,10 @@ CREATE TABLE IF NOT EXISTS `distance` (
 -- --------------------------------------------------------
 
 --
--- Struktura tabeli dla tabeli `temp_wilg`
+-- Struktura tabeli dla tabeli `temp_hum`
 --
 
-CREATE TABLE IF NOT EXISTS `temp_wilg` (
+CREATE TABLE IF NOT EXISTS `temp_hum` (
 `id` int(11) NOT NULL,
   `temp` float NOT NULL,
   `humidity` float NOT NULL,
@@ -69,10 +68,10 @@ CREATE TABLE IF NOT EXISTS `temp_wilg` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 --
--- Zrzut danych tabeli `temp_wilg`
+-- Zrzut danych tabeli `temp_hum`
 --
 
-INSERT INTO `temp_wilg` (`id`, `temp`, `humidity`, `date`) VALUES
+INSERT INTO `temp_hum` (`id`, `temp`, `humidity`, `date`) VALUES
 (1, 20.5, 0.3, '2015-01-16');
 
 --
@@ -80,9 +79,9 @@ INSERT INTO `temp_wilg` (`id`, `temp`, `humidity`, `date`) VALUES
 --
 
 --
--- Indexes for table `diody`
+-- Indexes for table `leds`
 --
-ALTER TABLE `diody`
+ALTER TABLE `leds`
  ADD PRIMARY KEY (`id`);
 
 --
@@ -92,9 +91,9 @@ ALTER TABLE `distance`
  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `temp_wilg`
+-- Indexes for table `temp_hum`
 --
-ALTER TABLE `temp_wilg`
+ALTER TABLE `temp_hum`
  ADD PRIMARY KEY (`id`);
 
 --
@@ -107,9 +106,9 @@ ALTER TABLE `temp_wilg`
 ALTER TABLE `distance`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT dla tabeli `temp_wilg`
+-- AUTO_INCREMENT dla tabeli `temp_hum`
 --
-ALTER TABLE `temp_wilg`
+ALTER TABLE `temp_hum`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
