@@ -121,6 +121,7 @@ if __name__ == '__main__':
 	temp = 100
 	lcd=HD44780()
 	WORK = True;
+	blockDB = False;
 	while WORK :
 		#lcd = HD44780()
 		dist1 = lcd.getDistance()
@@ -145,8 +146,9 @@ if __name__ == '__main__':
 		#lcd.cmd(0x01)
 		#lcd.message(str(dist)+" cm\nLeft: "+str(temp)+" sek")
 		#temp = temp - 1
-		if dist < 5:
+		if dist < 5 and not blockDB:
 			lcd.insertToDB(dist)
+			blockDB = True;
 			GPIO.output(BRAKE,True)
 			tempMes="  !!! STOP !!!"
 		else:
@@ -167,6 +169,7 @@ if __name__ == '__main__':
 			GPIO.output(BUZZ1,False)
 			GPIO.output(BUZZ2,True)
 		if dist >= 30:
+			blockDB = False;
 			GPIO.output(BUZZ0,False)
 			GPIO.output(BUZZ1,False)
 			GPIO.output(BUZZ2,False)
