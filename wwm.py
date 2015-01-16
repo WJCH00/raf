@@ -98,9 +98,7 @@ class HD44780:
         db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
         cur = db.cursor()
         currentTime = datetime.datetime.now()
-        query = ("INSERT INTO distance "
-                 "(distance, date) "
-                 "VALUES (%(distance)s, %(currentTime)s)")
+        query = ("INSERT INTO distance(distance, date) VALUES ('asd','asdd')")
         cur.execute(query)
         cur.close()
         db.close()
