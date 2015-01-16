@@ -95,7 +95,7 @@ class HD44780:
         
 	def insertToDB(distance):
 
-		db = MySQLdb.connect(host="localhost", user="root", passwd="", db="raspberry_mysql")
+		db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
 		cur = db.cursor()
 
 		currentTime = datetime.datetime.now()

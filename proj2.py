@@ -1,5 +1,7 @@
 #!/usr/bin/python
 import RPi.GPIO as GPIO
+import MySQLdb
+import datetime
 import time
 from time import sleep
 TRIG = 20
@@ -91,6 +93,18 @@ class HD44780:
         GPIO.output(self.pin_e, True)
         GPIO.output(self.pin_e, False)
         
+	def insertToDB(distance):
+
+		db = MySQLdb.connect(host="localhost", user="root", passwd="", db="raspberry_mysql")
+		cur = db.cursor()
+
+		currentTime = datetime.datetime.now()
+		cur.execute("INSERT into distance VALUES('"+str(distance)+"','"+str(currentTime)+")")
+
+		cur.close()
+		db.close ()
+		
+		
     def message(self, text):
         """ Send string to LCD """
 
@@ -107,6 +121,7 @@ if __name__ == '__main__':
 	while WORK :
 		#lcd = HD44780()
 		dist1 = lcd.getDistance()
+		lcd.insertToDB(dist1)
 		sleep(0.1)		
 		dist2 = lcd.getDistance()
 		sleep(0.1)
