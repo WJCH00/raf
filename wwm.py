@@ -13,15 +13,15 @@ BUTT = 26
 BRAKE = 13
 
 class HD44780:
-    
+
 
     def __init__(self, pin_rs=7, pin_e=8, pins_db=[25, 24, 23, 18]):
-        	
+
         self.pin_rs = pin_rs
         self.pin_e = pin_e
         self.pins_db = pins_db
 	#GPIO.cleanup()
-	GPIO.setwarnings(False)	
+	GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin_e, GPIO.OUT)
         GPIO.setup(self.pin_rs, GPIO.OUT)
@@ -58,19 +58,19 @@ class HD44780:
 
     def clear(self):
         """ Reset LCD """
-        self.cmd(0x33) 
-        self.cmd(0x32) 
-        self.cmd(0x28) 
-        self.cmd(0x0C) 
-        self.cmd(0x06) 
-        self.cmd(0x01) 
-        
+        self.cmd(0x33)
+        self.cmd(0x32)
+        self.cmd(0x28)
+        self.cmd(0x0C)
+        self.cmd(0x06)
+        self.cmd(0x01)
+
     def cmd(self, bits, char_mode=False):
         """ Command to LCD """
 
         sleep(0.001)
         bits=bin(bits)[2:].zfill(8)
-        
+
         GPIO.output(self.pin_rs, char_mode)
 
         for pin in self.pins_db:
@@ -92,24 +92,19 @@ class HD44780:
 
         GPIO.output(self.pin_e, True)
         GPIO.output(self.pin_e, False)
-        
-	def insertToDB(distance):
 
-		db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
-		cur = db.cursor()
+    def insertToDB(distance):
+        """ insertToDB to LCD """
+        db = MySQLdb.connect(host="localhost", user="root", passwd="qwerty", db="raspberry_mysql")
+        cur = db.cursor()
+        currentTime = datetime.datetime.now()
+        query = ("INSERT INTO distance "
+                 "(distance, date) "
+                 "VALUES (%(distance)s, %(currentTime)s)")
+        cur.execute(query)
+        cur.close()
+        db.close()
 
-		currentTime = datetime.datetime.now()
-		
-		 query = ("INSERT INTO distance "
-              "(distance, date) "
-              "VALUES (%(distance)s, %(currentTime)s)")
-		
-		cur.execute(query)
-
-		cur.close()
-		db.close ()
-		
-		
     def message(self, text):
         """ Send string to LCD """
 
@@ -127,7 +122,7 @@ if __name__ == '__main__':
 		#lcd = HD44780()
 		dist1 = lcd.getDistance()
 		lcd.insertToDB(dist1)
-		sleep(0.1)		
+		sleep(0.1)
 		dist2 = lcd.getDistance()
 		sleep(0.1)
 		dist3 = lcd.getDistance()
@@ -171,7 +166,7 @@ if __name__ == '__main__':
 		if dist >= 30:
 			GPIO.output(BUZZ0,False)
 			GPIO.output(BUZZ1,False)
-			GPIO.output(BUZZ2,False)	
+			GPIO.output(BUZZ2,False)
 		#GPIO.output(BUZZ,True)
 		sleep(0.1)
 		#lcd.clear()
