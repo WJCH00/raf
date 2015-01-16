@@ -99,7 +99,7 @@ class HD44780:
 		cur = db.cursor()
 
 		currentTime = datetime.datetime.now()
-		cur.execute("INSERT into distance VALUES('"+str(distance)+"','"+str(currentTime)+")")
+		cur.execute("INSERT into distance VALUES('"+str(distance)+"','"+str(currentTime)+");")
 
 		cur.close()
 		db.close ()
